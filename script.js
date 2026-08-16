@@ -551,8 +551,7 @@ function startHomeMusic() {
     /*
      * 1:06 = 66 วินาที
      */
-    bgMusic.currentTime =
-        66;
+   
 
 
     bgMusic.volume =
