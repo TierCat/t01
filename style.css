@@ -422,6 +422,138 @@ button {
 
 
 /* ==================================================
+   PREMIUM MUSIC MICRO-INTERACTIONS
+================================================== */
+
+#musicPage { position: relative; isolation: isolate; }
+
+#musicPage::before,
+#musicPage::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,154,184,.16) 0%, rgba(232,154,184,0) 70%);
+    pointer-events: none;
+}
+
+#musicPage::before { top: 6%; left: -80px; animation: softFloat 7s ease-in-out infinite; }
+#musicPage::after { right: -90px; bottom: 5%; animation: softFloat 8s ease-in-out infinite reverse; }
+
+@keyframes softFloat {
+    0%,100% { transform: translate3d(0,0,0); }
+    50% { transform: translate3d(0,-12px,0); }
+}
+
+.page-leaving { animation: pageLeave .36s cubic-bezier(.22,1,.36,1) forwards; }
+.page-entering { animation: pageEnter .72s cubic-bezier(.22,1,.36,1) both; }
+
+@keyframes pageLeave {
+    from { opacity: 1; transform: scale(1); filter: blur(0); }
+    to { opacity: 0; transform: scale(.985); filter: blur(2px); }
+}
+
+@keyframes pageEnter {
+    from { opacity: 0; transform: translateY(12px) scale(.985); filter: blur(2px); }
+    55% { opacity: 1; filter: blur(0); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+.music-widget {
+    position: relative;
+    overflow: hidden;
+    transition: grid-template-columns .55s cubic-bezier(.22,1,.36,1), gap .55s cubic-bezier(.22,1,.36,1), padding .45s ease, transform .35s ease, box-shadow .35s ease;
+}
+
+.music-widget::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 12% 10%, rgba(255,210,227,.36), transparent 28%), radial-gradient(circle at 92% 92%, rgba(244,188,210,.22), transparent 30%);
+}
+
+.music-widget > * { position: relative; z-index: 1; }
+
+.music-cover {
+    position: relative;
+    transition: width .55s cubic-bezier(.22,1,.36,1), height .55s cubic-bezier(.22,1,.36,1), border-radius .45s ease, transform .45s cubic-bezier(.22,1,.36,1), box-shadow .45s ease;
+}
+
+.music-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 25%, rgba(255,255,255,.28) 48%, transparent 65%);
+    transform: translateX(-130%);
+    transition: transform .75s ease;
+}
+
+.music-widget:hover .music-cover::after { transform: translateX(130%); }
+.music-widget:hover { transform: translateY(-2px); box-shadow: 0 24px 65px rgba(192,127,153,.17); }
+
+.layout-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 5;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    color: var(--pink-dark);
+    background: rgba(255,247,250,.92);
+    border: 1px solid rgba(232,154,184,.22);
+    border-radius: 50%;
+    box-shadow: 0 5px 16px rgba(180,120,145,.12);
+    transition: transform .35s ease, background .35s ease;
+}
+
+.layout-toggle:hover { transform: rotate(-6deg) scale(1.06); background: #fff; }
+.layout-toggle.is-changing { animation: layoutPop .45s cubic-bezier(.22,1,.36,1); }
+
+@keyframes layoutPop {
+    0% { transform: scale(1) rotate(0); }
+    45% { transform: scale(.86) rotate(-8deg); }
+    100% { transform: scale(1) rotate(0); }
+}
+
+.layout-icon { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.layout-icon-horizontal { display: none; }
+
+.music-widget.is-horizontal { grid-template-columns: 150px minmax(0,1fr); gap: 22px; }
+.music-widget.is-horizontal .music-cover { width: 150px; height: 150px; border-radius: 18px; }
+.music-widget.is-horizontal .layout-icon-vertical { display: none; }
+.music-widget.is-horizontal .layout-icon-horizontal { display: block; }
+
+.music-label { display: inline-flex; align-items: center; gap: 7px; }
+.music-label::before {
+    content: "";
+    width: 6px; height: 6px; border-radius: 50%; background: var(--pink);
+    box-shadow: 0 0 0 4px rgba(232,154,184,.12);
+    animation: nowDot 1.8s ease-in-out infinite;
+}
+
+@keyframes nowDot {
+    0%,100% { opacity: .6; transform: scale(.85); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+.music-note { transition: transform .3s ease, box-shadow .3s ease; }
+.music-note:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(232,154,184,.11); }
+.icon-button, .play-control { transition: transform .25s ease, color .25s ease, background .25s ease, box-shadow .25s ease; }
+.icon-button:hover { transform: translateY(-2px); color: var(--pink-dark); background: rgba(232,154,184,.08); }
+.play-control:hover { transform: scale(1.06); box-shadow: 0 12px 28px rgba(230,149,182,.42); }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+
+/* ==================================================
    PROGRESS
 ================================================== */
 
@@ -722,6 +854,37 @@ button {
         padding: 16px;
         border-radius: 24px;
     }
+
+    .layout-toggle {
+        top: 10px;
+        right: 10px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .music-widget.is-horizontal {
+        grid-template-columns: 112px minmax(0,1fr);
+        gap: 13px;
+        padding: 14px;
+        align-items: center;
+    }
+
+    .music-widget.is-horizontal .music-cover {
+        width: 112px;
+        height: 112px;
+        border-radius: 16px;
+    }
+
+    .music-widget.is-horizontal .music-title {
+        font-size: clamp(20px, 6vw, 24px);
+    }
+
+    .music-widget.is-horizontal .music-artist { font-size: 13px; }
+    .music-widget.is-horizontal .progress-area { margin-top: 12px; }
+    .music-widget.is-horizontal .player-controls { margin-top: 8px; gap: 0; }
+    .music-widget.is-horizontal .control { width: 29px; height: 29px; }
+    .music-widget.is-horizontal .play-control { width: 48px; height: 48px; }
+    .music-widget.is-horizontal .music-note { grid-column: 1 / -1; margin-top: 0; }
 
     .music-cover {
         width: min(100%, 300px);

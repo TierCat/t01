@@ -71,6 +71,12 @@ const shuffleBtn =
 const likeBtn =
     document.getElementById("likeBtn");
 
+const layoutToggle =
+    document.getElementById("layoutToggle");
+
+const musicWidget =
+    document.querySelector(".music-widget");
+
 const celebration =
     document.getElementById("celebration");
 
@@ -773,56 +779,78 @@ if (yesBtn) {
 
     yesBtn.addEventListener(
         "click",
-        () => {
+        async () => {
 
             if (bgMusic) {
                 bgMusic.pause();
             }
 
+            if (yesBtn.disabled) {
+                return;
+            }
+
+            yesBtn.disabled = true;
+
+            mainContent?.classList.add(
+                "page-leaving"
+            );
+
+            await wait(360);
 
             mainContent?.classList.add(
                 "hidden"
             );
 
+            mainContent?.classList.remove(
+                "page-leaving"
+            );
 
             musicPage?.classList.remove(
                 "hidden"
             );
 
+            musicPage?.classList.add(
+                "page-entering"
+            );
+
+            window.setTimeout(
+                () => {
+                    musicPage?.classList.remove(
+                        "page-entering"
+                    );
+                },
+                850
+            );
 
             if (attachedMusic) {
 
-                attachedMusic.currentTime =
-                    0;
-
-                attachedMusic.volume =
-                    0.55;
-
-                attachedMusic.loop =
-                    false;
-
+                attachedMusic.currentTime = 0;
+                attachedMusic.volume = 0.55;
+                attachedMusic.loop = false;
 
                 const promise =
                     attachedMusic.play();
 
-
                 if (promise) {
-
-                    promise.catch(
-                        () => {}
-                    );
-
+                    promise.catch(() => {});
                 }
 
             }
 
-
             updateMusicUI();
+
+            window.setTimeout(
+                () => {
+                    yesBtn.disabled = false;
+                },
+                450
+            );
 
         }
     );
 
 }
+
 
 
 /* ==================================================
@@ -1147,6 +1175,45 @@ if (likeBtn) {
 
             likeBtn.classList.toggle(
                 "is-liked"
+            );
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   MUSIC LAYOUT TOGGLE
+================================================== */
+
+if (layoutToggle && musicWidget) {
+
+    layoutToggle.addEventListener(
+        "click",
+        () => {
+
+            const isHorizontal =
+                musicWidget.classList.toggle(
+                    "is-horizontal"
+                );
+
+            layoutToggle.setAttribute(
+                "aria-pressed",
+                String(isHorizontal)
+            );
+
+            layoutToggle.classList.add(
+                "is-changing"
+            );
+
+            window.setTimeout(
+                () => {
+                    layoutToggle.classList.remove(
+                        "is-changing"
+                    );
+                },
+                450
             );
 
         }
