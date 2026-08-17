@@ -651,16 +651,18 @@ button {
 
     #mainContent {
         min-height: 100dvh;
-        padding: 18px 12px 30px;
-        justify-content: flex-start;
+        height: 100dvh;
+        padding: 10px 12px 12px;
+        justify-content: center;
         align-items: center;
+        overflow: hidden;
     }
 
     .card {
         width: 100%;
         max-width: 520px;
-        padding: 18px 14px 20px;
-        border-radius: 28px;
+        padding: 12px 12px 14px;
+        border-radius: 26px;
     }
 
     .message-image-wrap {
@@ -669,21 +671,20 @@ button {
 
     .beg-image {
         width: 100%;
-        height: auto;
+        height: min(40dvh, 330px);
         aspect-ratio: 4 / 5;
         min-height: 0;
-        max-height: 58dvh;
-        border-radius: 24px;
+        border-radius: 22px;
         object-fit: cover;
         object-position: center center;
     }
 
     .question {
-        min-height: 215px;
-        margin: 18px 0;
+        min-height: 178px;
+        margin: 10px 0 8px;
         padding: 0 4px;
-        font-size: clamp(19px, 5.5vw, 22px);
-        line-height: 1.6;
+        font-size: clamp(18px, 5.2vw, 21px);
+        line-height: 1.48;
     }
 
     .typed-line {
@@ -693,14 +694,15 @@ button {
 
     .buttons {
         width: 100%;
-        min-height: 190px;
+        min-height: 118px;
         overflow: hidden;
     }
 
     .buttons button {
-        width: min(215px, 80vw);
-        min-height: 50px;
-        font-size: 16px;
+        width: min(210px, 78vw);
+        min-height: 46px;
+        padding: 10px 20px;
+        font-size: 15px;
     }
 
 
@@ -775,6 +777,39 @@ button {
         right: 12px;
         width: 42px;
         height: 42px;
+    }
+}
+
+
+@media (max-width: 380px) {
+    #mainContent {
+        padding: 8px 10px 10px;
+    }
+
+    .card {
+        padding: 10px 10px 12px;
+        border-radius: 24px;
+    }
+
+    .beg-image {
+        height: min(37dvh, 285px);
+        border-radius: 20px;
+    }
+
+    .question {
+        min-height: 165px;
+        margin: 8px 0 6px;
+        font-size: 18px;
+        line-height: 1.45;
+    }
+
+    .buttons {
+        min-height: 108px;
+    }
+
+    .buttons button {
+        min-height: 44px;
+        font-size: 14px;
     }
 }
 
