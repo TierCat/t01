@@ -1,6 +1,6 @@
 /* ==================================================
    KNOCK KNOCK
-   MAIN SCRIPT
+   CLEAN / RESPONSIVE VERSION
 ================================================== */
 
 
@@ -56,12 +56,6 @@ const playBtn =
 const playIcon =
     document.getElementById("playIcon");
 
-const backBtn =
-    document.getElementById("backBtn");
-
-const forwardBtn =
-    document.getElementById("forwardBtn");
-
 const prevBtn =
     document.getElementById("prevBtn");
 
@@ -91,9 +85,7 @@ let doorOpening = false;
 
 let typingStarted = false;
 
-let noButtonX = 0;
-
-let noButtonY = 0;
+let noButtonMoved = false;
 
 
 /* ==================================================
@@ -101,22 +93,16 @@ let noButtonY = 0;
 ================================================== */
 
 const messageText = [
-
     "คุณหน้าเหมือนแมวเลยอะ",
-
     "ดูน่ารัก นุ่มฟู",
-
     "แล้วก็ชวนให้เอ็นดูมากๆ",
-
     "น่ารักจัง",
-
     "ผมว่าผมรักแมว"
-
 ];
 
 
 /* ==================================================
-   HELPER
+   HELPERS
 ================================================== */
 
 function wait(ms) {
@@ -146,15 +132,11 @@ function formatTime(seconds) {
 
 
     const minutes =
-        Math.floor(
-            seconds / 60
-        );
+        Math.floor(seconds / 60);
 
 
     const secondsPart =
-        Math.floor(
-            seconds % 60
-        )
+        Math.floor(seconds % 60)
         .toString()
         .padStart(2, "0");
 
@@ -165,25 +147,28 @@ function formatTime(seconds) {
 
 
 /* ==================================================
-   HEART + FLOWER BURST
-   พุ่งออกมาพร้อมรูป
+   HEART BURST
 ================================================== */
 
 function playHeartBurst() {
 
-    if (!celebration || !mainContent) {
+    if (
+        !celebration ||
+        !mainContent
+    ) {
+
         return;
+
     }
+
 
     celebration.innerHTML = "";
 
 
-    /*
-     * หา "รูปหลัก" ในหน้าปัจจุบัน
-     * เพื่อให้เอฟเฟกต์พุ่งออกจากบริเวณรูป
-     */
     const image =
-        mainContent.querySelector("img");
+        mainContent.querySelector(
+            ".beg-image"
+        );
 
 
     let originX =
@@ -211,116 +196,24 @@ function playHeartBurst() {
     }
 
 
-    /*
-     * หัวใจ + ดอกไม้ + ประกาย
-     *
-     * จำนวนไม่เยอะ
-     * เพื่อไม่ให้บังข้อความ
-     */
     const effects = [
 
-        {
-            emoji: "💗",
-            x: -115,
-            y: -90,
-            size: 20,
-            rotate: -18
-        },
-
-        {
-            emoji: "😼",
-            x: -155,
-            y: -25,
-            size: 22,
-            rotate: -25
-        },
-
-        {
-            emoji: "✨",
-            x: -95,
-            y: -145,
-            size: 18,
-            rotate: 15
-        },
-
-        {
-            emoji: "💕",
-            x: 105,
-            y: -105,
-            size: 21,
-            rotate: 18
-        },
-
-        {
-            emoji: "🌸",
-            x: 150,
-            y: -30,
-            size: 21,
-            rotate: 25
-        },
-
-        {
-            emoji: "✦",
-            x: 100,
-            y: -150,
-            size: 17,
-            rotate: -15
-        },
-
-        {
-            emoji: "💖",
-            x: 145,
-            y: 65,
-            size: 20,
-            rotate: 20
-        },
-
-        {
-            emoji: "🌷",
-            x: 85,
-            y: 125,
-            size: 21,
-            rotate: 15
-        },
-
-        {
-            emoji: "♡",
-            x: -95,
-            y: 125,
-            size: 20,
-            rotate: -15
-        },
-
-        {
-            emoji: "🌸",
-            x: -150,
-            y: 65,
-            size: 21,
-            rotate: -25
-        },
-
-        {
-            emoji: "✨",
-            x: -55,
-            y: 145,
-            size: 17,
-            rotate: 20
-        },
-
-        {
-            emoji: "💗",
-            x: 50,
-            y: 145,
-            size: 19,
-            rotate: -18
-        }
+        [-115, -90, 20, "💗", -18],
+        [-155, -25, 22, "😼", -25],
+        [-95, -145, 18, "✨", 15],
+        [105, -105, 21, "💕", 18],
+        [150, -30, 21, "🌸", 25],
+        [100, -150, 17, "✦", -15],
+        [145, 65, 20, "💖", 20],
+        [85, 125, 21, "🌷", 15],
+        [-95, 125, 20, "♡", -15],
+        [-150, 65, 21, "🌸", -25],
+        [-55, 145, 17, "✨", 20],
+        [50, 145, 19, "💗", -18]
 
     ];
 
 
-    /*
-     * สร้าง particle
-     */
     effects.forEach(
         (effect, index) => {
 
@@ -335,7 +228,7 @@ function playHeartBurst() {
 
 
             particle.textContent =
-                effect.emoji;
+                effect[3];
 
 
             particle.style.left =
@@ -347,31 +240,27 @@ function playHeartBurst() {
 
 
             particle.style.fontSize =
-                `${effect.size}px`;
+                `${effect[2]}px`;
 
 
             particle.style.setProperty(
                 "--x",
-                `${effect.x}px`
+                `${effect[0]}px`
             );
 
 
             particle.style.setProperty(
                 "--y",
-                `${effect.y}px`
+                `${effect[1]}px`
             );
 
 
             particle.style.setProperty(
                 "--rotate",
-                `${effect.rotate}deg`
+                `${effect[4]}deg`
             );
 
 
-            /*
-             * ให้พุ่งออกเกือบพร้อมกัน
-             * แต่ไม่พร้อมเป๊ะจนดูแข็ง
-             */
             particle.style.animationDelay =
                 `${index * 0.025}s`;
 
@@ -384,10 +273,7 @@ function playHeartBurst() {
     );
 
 
-    /*
-     * ล้างหลัง animation
-     */
-    setTimeout(
+    window.setTimeout(
         () => {
 
             celebration.innerHTML = "";
@@ -409,15 +295,10 @@ async function typeOneLine(
 ) {
 
     if (!element) {
-
         return;
-
     }
 
 
-    /*
-     * สร้าง cursor
-     */
     const cursor =
         document.createElement(
             "span"
@@ -433,9 +314,6 @@ async function typeOneLine(
     );
 
 
-    /*
-     * พิมพ์ทีละตัว
-     */
     for (
         let i = 0;
         i < text.length;
@@ -449,17 +327,11 @@ async function typeOneLine(
         );
 
 
-        await wait(68);
+        await wait(55);
 
     }
 
 
-    /*
-     * สำคัญมาก
-     *
-     * พอจบบรรทัด
-     * cursor ของบรรทัดนี้หายทันที
-     */
     cursor.remove();
 
 }
@@ -467,28 +339,17 @@ async function typeOneLine(
 
 async function startTyping() {
 
-    /*
-     * ป้องกัน animation ซ้ำ
-     */
     if (typingStarted) {
-
         return;
-
     }
 
 
     typingStarted = true;
 
 
-    /*
-     * ให้คนดูรูปก่อน
-     */
-    await wait(700);
+    await wait(600);
 
 
-    /*
-     * พิมพ์ทีละบรรทัด
-     */
     for (
         let i = 0;
         i < messageText.length;
@@ -501,26 +362,19 @@ async function startTyping() {
         );
 
 
-        /*
-         * เว้นจังหวะระหว่างบรรทัด
-         */
         if (
             i <
             messageText.length - 1
         ) {
 
-            await wait(220);
+            await wait(160);
 
         }
 
     }
 
 
-    /*
-     * ข้อความจบแล้ว
-     * เว้นนิดหนึ่งก่อนให้ปุ่มขึ้น
-     */
-    await wait(500);
+    await wait(350);
 
 
     if (messageButtons) {
@@ -536,39 +390,24 @@ async function startTyping() {
 
 /* ==================================================
    HOME MUSIC
-   เพลงปก.mp3 เริ่มที่ 1:06
 ================================================== */
 
 function startHomeMusic() {
 
     if (!bgMusic) {
-
         return;
-
     }
 
 
-    /*
-     * 1:06 = 66 วินาที
-     */
-   
+    bgMusic.volume = 0.5;
 
-
-    bgMusic.volume =
-        0.5;
-
-
-    bgMusic.loop =
-        true;
+    bgMusic.loop = true;
 
 
     const promise =
         bgMusic.play();
 
 
-    /*
-     * กัน browser block autoplay
-     */
     if (promise) {
 
         promise.catch(
@@ -590,20 +429,11 @@ if (door) {
         "click",
         async () => {
 
-            /*
-             * ถ้ากำลังเปิดอยู่
-             * ห้ามกดซ้ำ
-             */
             if (doorOpening) {
-
                 return;
-
             }
 
 
-            /*
-             * Animation เคาะ
-             */
             door.classList.remove(
                 "knock"
             );
@@ -617,24 +447,15 @@ if (door) {
             );
 
 
-            knocks += 1;
+            knocks++;
 
 
-            /*
-             * ต้องเคาะ 2 ครั้ง
-             */
             if (knocks < 2) {
-
                 return;
-
             }
 
 
-            /*
-             * เริ่มเปิดประตู
-             */
-            doorOpening =
-                true;
+            doorOpening = true;
 
 
             door.style.pointerEvents =
@@ -646,76 +467,28 @@ if (door) {
             );
 
 
-            /*
-             * =================================================
-             * สำคัญ
-             *
-             * รอให้ประตูเปิดจนสุดก่อน
-             * ยังไม่ให้รูปหรือพลุขึ้น
-             * =================================================
-             */
-            await wait(1000);
+            await wait(900);
 
 
-            /*
-             * =================================================
-             * ตุ้ม!!
-             *
-             * รูป + เอฟเฟกต์พุ่งพร้อมกัน
-             * =================================================
-             */
+            doorScene?.classList.add(
+                "hidden"
+            );
 
 
-            /*
-             * ซ่อนหน้าแรก
-             */
-            if (doorScene) {
-
-                doorScene.classList.add(
-                    "hidden"
-                );
-
-            }
+            mainContent?.classList.remove(
+                "hidden"
+            );
 
 
-            /*
-             * แสดงหน้ารูป
-             */
-            if (mainContent) {
-
-                mainContent.classList.remove(
-                    "hidden"
-                );
-
-            }
-
-
-            /*
-             * 💗✨ พุ่งออกมา
-             */
             playHeartBurst();
 
 
-            /*
-             * เพลงเริ่มที่ 1:06
-             */
             startHomeMusic();
 
 
-            /*
-             * =================================================
-             * รอให้เห็นรูป + เอฟเฟกต์
-             * =================================================
-             */
-            await wait(950);
+            await wait(800);
 
 
-            /*
-             * =================================================
-             * หลังเอฟเฟกต์จบ
-             * ค่อยเริ่มพิมพ์
-             * =================================================
-             */
             startTyping();
 
         }
@@ -726,124 +499,227 @@ if (door) {
 
 /* ==================================================
    NO BUTTON
-   กดแล้ววิ่งหนีด้วย TRANSFORM
+   - Desktop: หนีเมื่อเมาส์เข้าใกล้
+   - Mobile: หนีเมื่อแตะ
+   - อยู่ในพื้นที่ .buttons
+   - และไม่ออกนอก viewport
 ================================================== */
-
-
-/*
- * ตำแหน่งที่สามารถวิ่งไปได้
- *
- * ไม่ใช้ fixed
- * ไม่ใช้ left
- * ไม่ใช้ top
- */
-const noButtonMoves = [
-
-    {
-        x: -120,
-        y: -65
-    },
-
-    {
-        x: 120,
-        y: -65
-    },
-
-    {
-        x: -135,
-        y: 55
-    },
-
-    {
-        x: 135,
-        y: 55
-    },
-
-    {
-        x: -90,
-        y: 95
-    },
-
-    {
-        x: 90,
-        y: 95
-    },
-
-    {
-        x: -145,
-        y: 0
-    },
-
-    {
-        x: 145,
-        y: 0
-    }
-
-];
-
 
 function moveNoButton() {
 
     if (!noBtn) {
-
         return;
+    }
+
+
+    const area =
+        noBtn.closest(".buttons");
+
+
+    if (!area) {
+        return;
+    }
+
+
+    /*
+     * ก่อนย้ายครั้งแรก:
+     * เปลี่ยนเป็น absolute แต่รักษาตำแหน่งเดิม
+     */
+    if (!noButtonMoved) {
+
+        const areaRect =
+            area.getBoundingClientRect();
+
+        const buttonRect =
+            noBtn.getBoundingClientRect();
+
+
+        const startLeft =
+            buttonRect.left -
+            areaRect.left +
+            area.scrollLeft;
+
+
+        const startTop =
+            buttonRect.top -
+            areaRect.top +
+            area.scrollTop;
+
+
+        noBtn.classList.add(
+            "is-running"
+        );
+
+
+        noBtn.style.left =
+            `${startLeft}px`;
+
+
+        noBtn.style.top =
+            `${startTop}px`;
+
+
+        noButtonMoved = true;
 
     }
 
 
-    let move;
-
-
     /*
-     * สุ่มจนกว่าจะได้ตำแหน่งใหม่
+     * ให้ browser วาง absolute ก่อน
      */
-    do {
+    requestAnimationFrame(
+        () => {
 
-        move =
-            noButtonMoves[
-                Math.floor(
-                    Math.random() *
-                    noButtonMoves.length
-                )
-            ];
+            const areaRect =
+                area.getBoundingClientRect();
 
-    } while (
+            const buttonRect =
+                noBtn.getBoundingClientRect();
 
-        move.x === noButtonX &&
-        move.y === noButtonY
 
+            const padding = 8;
+
+
+            /*
+             * พื้นที่ใน .buttons
+             */
+            let minLeft =
+                padding;
+
+            let maxLeft =
+                areaRect.width -
+                buttonRect.width -
+                padding;
+
+
+            let minTop =
+                padding;
+
+            let maxTop =
+                areaRect.height -
+                buttonRect.height -
+                padding;
+
+
+            /*
+             * จำกัดด้วยขอบจอด้วย
+             * กันไม่ให้ปุ่มหายไปจากจอ
+             */
+
+            const viewportMinLeft =
+                padding -
+                areaRect.left;
+
+            const viewportMaxLeft =
+                window.innerWidth -
+                padding -
+                buttonRect.width -
+                areaRect.left;
+
+
+            const viewportMinTop =
+                padding -
+                areaRect.top;
+
+            const viewportMaxTop =
+                window.innerHeight -
+                padding -
+                buttonRect.height -
+                areaRect.top;
+
+
+            minLeft =
+                Math.max(
+                    minLeft,
+                    viewportMinLeft
+                );
+
+
+            maxLeft =
+                Math.min(
+                    maxLeft,
+                    viewportMaxLeft
+                );
+
+
+            minTop =
+                Math.max(
+                    minTop,
+                    viewportMinTop
+                );
+
+
+            maxTop =
+                Math.min(
+                    maxTop,
+                    viewportMaxTop
+                );
+
+
+            /*
+             * ถ้าพื้นที่แคบมาก
+             * ให้ใช้จุดกึ่งกลางแทน
+             */
+            if (maxLeft < minLeft) {
+
+                minLeft =
+                    maxLeft =
+                    Math.max(
+                        0,
+                        (
+                            areaRect.width -
+                            buttonRect.width
+                        ) / 2
+                    );
+
+            }
+
+
+            if (maxTop < minTop) {
+
+                minTop =
+                    maxTop =
+                    Math.max(
+                        0,
+                        (
+                            areaRect.height -
+                            buttonRect.height
+                        ) / 2
+                    );
+
+            }
+
+
+            /*
+             * สุ่มตำแหน่งใหม่
+             */
+            const left =
+                minLeft +
+                Math.random() *
+                Math.max(
+                    0,
+                    maxLeft - minLeft
+                );
+
+
+            const top =
+                minTop +
+                Math.random() *
+                Math.max(
+                    0,
+                    maxTop - minTop
+                );
+
+
+            noBtn.style.left =
+                `${left}px`;
+
+
+            noBtn.style.top =
+                `${top}px`;
+
+        }
     );
-
-
-    /*
-     * จำตำแหน่งใหม่
-     */
-    noButtonX =
-        move.x;
-
-
-    noButtonY =
-        move.y;
-
-
-    /*
-     * ใส่ class
-     */
-    noBtn.classList.add(
-        "is-running"
-    );
-
-
-    /*
-     * ให้ CSS transition
-     * ทำหน้าที่วิ่งจากจุดเดิม
-     * ไปจุดใหม่
-     */
-    noBtn.style.transform =
-        `translate(
-            ${noButtonX}px,
-            ${noButtonY}px
-        )`;
 
 }
 
@@ -854,10 +730,17 @@ function moveNoButton() {
 if (noBtn) {
 
     noBtn.addEventListener(
-        "click",
+        "mouseenter",
         (event) => {
 
-            event.preventDefault();
+            if (
+                event.pointerType === "touch"
+            ) {
+
+                return;
+
+            }
+
 
             moveNoButton();
 
@@ -866,19 +749,16 @@ if (noBtn) {
 
 
     /*
-     * Mobile
+     * Mobile + Desktop touch
      */
     noBtn.addEventListener(
-        "touchstart",
+        "pointerdown",
         (event) => {
 
             event.preventDefault();
 
             moveNoButton();
 
-        },
-        {
-            passive: false
         }
     );
 
@@ -887,7 +767,6 @@ if (noBtn) {
 
 /* ==================================================
    YES BUTTON
-   เปิด MUSIC WIDGET
 ================================================== */
 
 if (yesBtn) {
@@ -896,52 +775,28 @@ if (yesBtn) {
         "click",
         () => {
 
-            /*
-             * หยุดเพลงหน้าแรก
-             */
             if (bgMusic) {
-
                 bgMusic.pause();
-
             }
 
 
-            /*
-             * ซ่อนหน้าข้อความ
-             */
-            if (mainContent) {
-
-                mainContent.classList.add(
-                    "hidden"
-                );
-
-            }
+            mainContent?.classList.add(
+                "hidden"
+            );
 
 
-            /*
-             * เปิด Music Widget
-             */
-            if (musicPage) {
-
-                musicPage.classList.remove(
-                    "hidden"
-                );
-
-            }
+            musicPage?.classList.remove(
+                "hidden"
+            );
 
 
-            /*
-             * เริ่มเพลงแนบ
-             */
             if (attachedMusic) {
 
                 attachedMusic.currentTime =
                     0;
 
-
                 attachedMusic.volume =
                     0.55;
-
 
                 attachedMusic.loop =
                     false;
@@ -986,9 +841,7 @@ function updatePlayIcon() {
     }
 
 
-    if (
-        attachedMusic.paused
-    ) {
+    if (attachedMusic.paused) {
 
         playIcon.innerHTML = `
             <path d="M8 5v14l11-7Z"></path>
@@ -1013,9 +866,7 @@ if (playBtn) {
         () => {
 
             if (!attachedMusic) {
-
                 return;
-
             }
 
 
@@ -1054,9 +905,7 @@ if (playBtn) {
 function updateMusicUI() {
 
     if (!attachedMusic) {
-
         return;
-
     }
 
 
@@ -1088,11 +937,21 @@ function updateMusicUI() {
         attachedMusic.duration > 0
     ) {
 
-        progressBar.value =
+        const progress =
             (
                 attachedMusic.currentTime /
                 attachedMusic.duration
             ) * 100;
+
+
+        progressBar.value =
+            progress;
+
+
+        progressBar.style.setProperty(
+            "--progress",
+            `${progress}%`
+        );
 
     }
 
@@ -1168,34 +1027,8 @@ if (progressBar) {
                 ) *
                 attachedMusic.duration;
 
-        }
-    );
 
-}
-
-
-/* ==================================================
-   BACK 10 SECONDS
-================================================== */
-
-if (backBtn) {
-
-    backBtn.addEventListener(
-        "click",
-        () => {
-
-            if (!attachedMusic) {
-
-                return;
-
-            }
-
-
-            attachedMusic.currentTime =
-                Math.max(
-                    0,
-                    attachedMusic.currentTime - 10
-                );
+            updateMusicUI();
 
         }
     );
@@ -1204,44 +1037,7 @@ if (backBtn) {
 
 
 /* ==================================================
-   FORWARD 10 SECONDS
-================================================== */
-
-if (forwardBtn) {
-
-    forwardBtn.addEventListener(
-        "click",
-        () => {
-
-            if (!attachedMusic) {
-
-                return;
-
-            }
-
-
-            const maxTime =
-                Number.isFinite(
-                    attachedMusic.duration
-                )
-                    ? attachedMusic.duration
-                    : attachedMusic.currentTime + 10;
-
-
-            attachedMusic.currentTime =
-                Math.min(
-                    maxTime,
-                    attachedMusic.currentTime + 10
-                );
-
-        }
-    );
-
-}
-
-
-/* ==================================================
-   PREVIOUS
+   PREVIOUS / NEXT
 ================================================== */
 
 if (prevBtn) {
@@ -1251,24 +1047,16 @@ if (prevBtn) {
         () => {
 
             if (!attachedMusic) {
-
                 return;
-
             }
 
-
-            attachedMusic.currentTime =
-                0;
+            attachedMusic.currentTime = 0;
 
         }
     );
 
 }
 
-
-/* ==================================================
-   NEXT
-================================================== */
 
 if (nextBtn) {
 
@@ -1277,11 +1065,8 @@ if (nextBtn) {
         () => {
 
             if (!attachedMusic) {
-
                 return;
-
             }
-
 
             if (
                 Number.isFinite(
@@ -1311,9 +1096,7 @@ if (repeatBtn) {
         () => {
 
             if (!attachedMusic) {
-
                 return;
-
             }
 
 
@@ -1404,9 +1187,6 @@ if (musicToggle) {
             }
 
 
-            /*
-             * Mute icon
-             */
             if (shouldMute) {
 
                 musicToggle.innerHTML = `
@@ -1420,13 +1200,7 @@ if (musicToggle) {
                     </svg>
                 `;
 
-            }
-
-
-            /*
-             * Volume icon
-             */
-            else {
+            } else {
 
                 musicToggle.innerHTML = `
                     <svg
